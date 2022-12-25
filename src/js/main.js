@@ -7,9 +7,10 @@ import fragmentSource from "./shader/fragmentShader.glsl?raw";
 
 import img01 from '../images/photo01.jpg';
 import img02 from '../images/photo02.jpg';
+import img03 from '../images/photo03.jpg';
 import imgDisp from '../images/displacement.jpg';
 
-let renderer, scene, camera, geometry;
+let renderer, scene, camera, geometry, mesh;
 
 const canvas = document.querySelector("#canvas");
 
@@ -47,11 +48,13 @@ async function init(){
 
   //ジオメトリ
   geometry = new THREE.PlaneGeometry(size.width, size.height, 40, 40);
+  // geometry = new THREE.PlaneBufferGeometry(2, 2);
 
   //テクスチャ
   const loader = new THREE.TextureLoader();
   const texture01 = await loader.loadAsync(img01);
   const texture02 = await loader.loadAsync(img02);
+  const texture03 = await loader.loadAsync(img03);
   const textureDisp = await loader.loadAsync(imgDisp);
 
   //GLSL用データ
@@ -68,8 +71,8 @@ async function init(){
     uTexDisp: {
       value: textureDisp
     },
-    uGeoResolution: {
-      value: new THREE.Vector2(geometry.parameters.width, geometry.parameters.height)
+    uResolution: {
+      value: new THREE.Vector2(size.width, size.height)
     },
     uTexResolution: {
       value: new THREE.Vector2(2048, 1024)
@@ -88,8 +91,10 @@ async function init(){
   });
 
   //メッシュ
-  const mesh = new THREE.Mesh(geometry, material);
+  mesh = new THREE.Mesh(geometry, material);
   scene.add(mesh);
+
+  console.log(mesh.material.uniforms);
 
   //Progress
   const tl = gsap.timeline({ repeat: -1 });
@@ -97,12 +102,55 @@ async function init(){
     value: 1.0,
     duration: 1.4,
     delay: 4,
-    ease: Circ.easeInOut
-  }).to(uniforms.uProgress, {
+    ease: Circ.easeInOut,
+    onComplete: ()=>{
+      uniforms.uTex01.value = texture03;
+    },
+  })
+  .to(uniforms.uProgress, {
     value: 0.0,
     duration: 1.4,
     delay: 4,
-    ease: Circ.easeInOut
+    ease: Circ.easeInOut,
+    onComplete: ()=>{
+      uniforms.uTex02.value = texture01;
+    },
+  })
+  .to(uniforms.uProgress, {
+    value: 1.0,
+    duration: 1.4,
+    delay: 4,
+    ease: Circ.easeInOut,
+    onComplete: ()=>{
+      uniforms.uTex01.value = texture02;
+    },
+  })
+  .to(uniforms.uProgress, {
+    value: 0.0,
+    duration: 1.4,
+    delay: 4,
+    ease: Circ.easeInOut,
+    onComplete: ()=>{
+      uniforms.uTex02.value = texture03;
+    },
+  })
+  .to(uniforms.uProgress, {
+    value: 1.0,
+    duration: 1.4,
+    delay: 4,
+    ease: Circ.easeInOut,
+    onComplete: ()=>{
+      uniforms.uTex01.value = texture01;
+    },
+  })
+  .to(uniforms.uProgress, {
+    value: 0.0,
+    duration: 1.4,
+    delay: 4,
+    ease: Circ.easeInOut,
+    onComplete: ()=>{
+      uniforms.uTex02.value = texture02;
+    },
   });
 
 
@@ -142,6 +190,6 @@ function onWindowResize() {
 
   size.width = window.innerWidth;
   size.height = window.innerHeight;
-
+  // mesh.material.uniforms.uResolution.value.set(window.innerWidth, window.innerHeight);
 }
 window.addEventListener("resize", onWindowResize);
