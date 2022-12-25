@@ -94,8 +94,6 @@ async function init(){
   mesh = new THREE.Mesh(geometry, material);
   scene.add(mesh);
 
-  console.log(mesh.material.uniforms);
-
   //Progress
   const tl = gsap.timeline({ repeat: -1 });
   tl.to(uniforms.uProgress, {
