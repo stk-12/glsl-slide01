@@ -1,7 +1,7 @@
 varying vec2 vUv;
 uniform float uTime;
-uniform sampler2D uTex01;
-uniform sampler2D uTex02;
+uniform sampler2D uTexCurrent;
+uniform sampler2D uTexNext;
 uniform sampler2D uTexDisp;
 uniform vec2 uResolution;
 uniform vec2 uTexResolution;
@@ -35,8 +35,8 @@ void main() {
 
   // vec3 tex1 = texture2D(uTex01, uv + disp).rgb;
   // vec3 tex2 = texture2D(uTex02, uv - disp).rgb;
-  vec3 tex1 = texture2D(uTex01, dispUv).rgb;
-  vec3 tex2 = texture2D(uTex02, dispUv2).rgb;
+  vec3 tex1 = texture2D(uTexCurrent, dispUv).rgb;
+  vec3 tex2 = texture2D(uTexNext, dispUv2).rgb;
 
   vec3 color = mix(tex1, tex2, uProgress);
 

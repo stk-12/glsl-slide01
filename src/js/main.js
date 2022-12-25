@@ -62,10 +62,10 @@ async function init(){
     uTime: {
       value: 0.0
     },
-    uTex01: {
+    uTexCurrent: {
       value: texture01
     },
-    uTex02: {
+    uTexNext: {
       value: texture02
     },
     uTexDisp: {
@@ -98,56 +98,35 @@ async function init(){
   const tl = gsap.timeline({ repeat: -1 });
   tl.to(uniforms.uProgress, {
     value: 1.0,
-    duration: 1.4,
+    duration: 1.2,
     delay: 4,
     ease: Circ.easeInOut,
     onComplete: ()=>{
-      uniforms.uTex01.value = texture03;
-    },
-  })
-  .to(uniforms.uProgress, {
-    value: 0.0,
-    duration: 1.4,
-    delay: 4,
-    ease: Circ.easeInOut,
-    onComplete: ()=>{
-      uniforms.uTex02.value = texture01;
+      uniforms.uTexCurrent.value = texture02;
+      uniforms.uTexNext.value = texture03;
+      uniforms.uProgress.value = 0.0;
     },
   })
   .to(uniforms.uProgress, {
     value: 1.0,
-    duration: 1.4,
+    duration: 1.2,
     delay: 4,
     ease: Circ.easeInOut,
     onComplete: ()=>{
-      uniforms.uTex01.value = texture02;
-    },
-  })
-  .to(uniforms.uProgress, {
-    value: 0.0,
-    duration: 1.4,
-    delay: 4,
-    ease: Circ.easeInOut,
-    onComplete: ()=>{
-      uniforms.uTex02.value = texture03;
+      uniforms.uTexCurrent.value = texture03;
+      uniforms.uTexNext.value = texture01;
+      uniforms.uProgress.value = 0.0;
     },
   })
   .to(uniforms.uProgress, {
     value: 1.0,
-    duration: 1.4,
+    duration: 1.2,
     delay: 4,
     ease: Circ.easeInOut,
     onComplete: ()=>{
-      uniforms.uTex01.value = texture01;
-    },
-  })
-  .to(uniforms.uProgress, {
-    value: 0.0,
-    duration: 1.4,
-    delay: 4,
-    ease: Circ.easeInOut,
-    onComplete: ()=>{
-      uniforms.uTex02.value = texture02;
+      uniforms.uTexCurrent.value = texture01;
+      uniforms.uTexNext.value = texture02;
+      uniforms.uProgress.value = 0.0;
     },
   });
 
