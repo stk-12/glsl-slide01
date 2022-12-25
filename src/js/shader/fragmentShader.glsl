@@ -28,10 +28,10 @@ void main() {
 
   vec3 texDisp = texture2D(uTexDisp, uv).rgb;
   float disp = texDisp.r;
-  disp = disp * parabola(uProgress, 1.0);
+  disp = disp * parabola(uProgress, 0.8);
 
   vec3 tex1 = texture2D(uTex01, uv + disp).rgb;
-  vec3 tex2 = texture2D(uTex02, uv + disp).rgb;
+  vec3 tex2 = texture2D(uTex02, uv - disp).rgb;
 
   vec3 color = mix(tex1, tex2, uProgress);
 
