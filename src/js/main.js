@@ -8,7 +8,12 @@ import fragmentSource from "./shader/fragmentShader.glsl?raw";
 import img01 from '../images/photo01.jpg';
 import img02 from '../images/photo02.jpg';
 import img03 from '../images/photo03.jpg';
-import imgDisp from '../images/displacement.jpg';
+import imgDisp1 from '../images/1.jpg';
+import imgDisp2 from '../images/2.jpg';
+import imgDisp3 from '../images/3.jpg';
+import imgDisp4 from '../images/4.jpg';
+import imgDisp5 from '../images/5.jpg';
+import imgDisp6 from '../images/6.jpg';
 
 let renderer, scene, camera, geometry, mesh;
 
@@ -55,7 +60,15 @@ async function init(){
   const texture01 = await loader.loadAsync(img01);
   const texture02 = await loader.loadAsync(img02);
   const texture03 = await loader.loadAsync(img03);
-  const textureDisp = await loader.loadAsync(imgDisp);
+
+  const textureDispArry = [
+    await loader.loadAsync(imgDisp1),
+    await loader.loadAsync(imgDisp2),
+    await loader.loadAsync(imgDisp3),
+    await loader.loadAsync(imgDisp4),
+    await loader.loadAsync(imgDisp5),
+    await loader.loadAsync(imgDisp6)
+  ];
 
   //GLSL用データ
   let uniforms = {
@@ -69,7 +82,7 @@ async function init(){
       value: texture02
     },
     uTexDisp: {
-      value: textureDisp
+      value: textureDispArry[0]
     },
     uResolution: {
       value: new THREE.Vector2(size.width, size.height)
@@ -98,7 +111,7 @@ async function init(){
   const tl = gsap.timeline({ repeat: -1 });
   tl.to(uniforms.uProgress, {
     value: 1.0,
-    duration: 1.2,
+    duration: 0.8,
     delay: 4,
     ease: Circ.easeInOut,
     onComplete: ()=>{
@@ -109,7 +122,7 @@ async function init(){
   })
   .to(uniforms.uProgress, {
     value: 1.0,
-    duration: 1.2,
+    duration: 0.8,
     delay: 4,
     ease: Circ.easeInOut,
     onComplete: ()=>{
@@ -120,7 +133,7 @@ async function init(){
   })
   .to(uniforms.uProgress, {
     value: 1.0,
-    duration: 1.2,
+    duration: 0.8,
     delay: 4,
     ease: Circ.easeInOut,
     onComplete: ()=>{
@@ -129,6 +142,22 @@ async function init(){
       uniforms.uProgress.value = 0.0;
     },
   });
+
+  //change displacement
+  function changeDisp(num){
+    uniforms.uTexDisp.value = textureDispArry[num];
+    navBtns.forEach((navBtn)=>{
+      navBtn.classList.remove('is-active');
+    });
+  }
+  const navBtns = document.querySelectorAll('button');
+  navBtns.forEach((navBtn)=>{
+    navBtn.addEventListener('click', (e)=>{
+      let num = Number(navBtn.dataset.effect);
+      changeDisp(num);
+      e.target.classList.add('is-active');
+    });
+  })
 
 
   function animate(){
