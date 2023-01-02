@@ -15,7 +15,7 @@ import imgDisp4 from '../images/4.jpg';
 import imgDisp5 from '../images/5.jpg';
 import imgDisp6 from '../images/6.jpg';
 
-let renderer, scene, camera, geometry, mesh;
+let renderer, scene, camera, fovRadian, distance, geometry, mesh;
 
 const canvas = document.querySelector("#canvas");
 
@@ -40,8 +40,8 @@ async function init(){
   //カメラ
   //ウインドウとWebGL座標を一致させる
   const fov = 45;
-  const fovRadian = (fov / 2) * (Math.PI / 180); //視野角をラジアンに変換
-  const distance = (size.height / 2) / Math.tan(fovRadian); //ウインドウぴったりのカメラ距離
+  fovRadian = (fov / 2) * (Math.PI / 180); //視野角をラジアンに変換
+  distance = (size.height / 2) / Math.tan(fovRadian); //ウインドウぴったりのカメラ距離
   camera = new THREE.PerspectiveCamera(fov, size.width / size.height, 1, distance * 2);
   camera.position.z = distance;
   camera.lookAt(new THREE.Vector3(0, 0, 0));
@@ -164,7 +164,7 @@ async function init(){
 
     uniforms.uTime.value += 0.03;
 
-    mesh.geometry.verticesNeedUpdate = true;
+    // mesh.geometry.verticesNeedUpdate = true;
     
     //レンダリング
     renderer.render(scene, camera);
@@ -196,10 +196,15 @@ function onWindowResize() {
   // カメラのアスペクト比を修正
   camera.aspect = size.width / size.height;
   camera.updateProjectionMatrix();
+  distance = (size.height / 2) / Math.tan(fovRadian);
+  camera.position.z = distance;
 
   mesh.material.uniforms.uResolution.value.set(size.width, size.height);
-  const scaleX = size.width / mesh.geometry.parameters.width;
-  const scaleY = size.height / mesh.geometry.parameters.height;
+  // const scaleX = size.width / mesh.geometry.parameters.width + 0.01;
+  // const scaleY = size.height / mesh.geometry.parameters.height + 0.01;
+  const scaleX = Math.round(size.width / mesh.geometry.parameters.width * 100) / 100 + 0.01;
+  const scaleY = Math.round(size.height / mesh.geometry.parameters.height * 100) / 100 + 0.01;
+
   mesh.scale.set(scaleX, scaleY, 1);
 
 }
