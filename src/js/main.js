@@ -53,7 +53,6 @@ async function init(){
 
   //ジオメトリ
   geometry = new THREE.PlaneGeometry(size.width, size.height, 40, 40);
-  // geometry = new THREE.PlaneBufferGeometry(2, 2);
 
   //テクスチャ
   const loader = new THREE.TextureLoader();
@@ -164,6 +163,8 @@ async function init(){
     //アニメーション処理
 
     uniforms.uTime.value += 0.03;
+
+    mesh.geometry.verticesNeedUpdate = true;
     
     //レンダリング
     renderer.render(scene, camera);
@@ -188,14 +189,18 @@ init();
 
 //リサイズ
 function onWindowResize() {
-  // レンダラーのサイズを修正
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  // カメラのアスペクト比を修正
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-
   size.width = window.innerWidth;
   size.height = window.innerHeight;
-  // mesh.material.uniforms.uResolution.value.set(window.innerWidth, window.innerHeight);
+  // レンダラーのサイズを修正
+  renderer.setSize(size.width, size.height);
+  // カメラのアスペクト比を修正
+  camera.aspect = size.width / size.height;
+  camera.updateProjectionMatrix();
+
+  mesh.material.uniforms.uResolution.value.set(size.width, size.height);
+  const scaleX = size.width / mesh.geometry.parameters.width;
+  const scaleY = size.height / mesh.geometry.parameters.height;
+  mesh.scale.set(scaleX, scaleY, 1);
+
 }
 window.addEventListener("resize", onWindowResize);
